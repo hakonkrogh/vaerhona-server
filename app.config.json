@@ -1,0 +1,16 @@
+...http://www.vhsys.no/api/logger_v1.php",
+    "logInterval": 3600,
+    "wifiNetworks": [
+        {
+            "Id": "coghNov15",
+            "removeOld": true,
+            "ssid": "cogh",
+            "psk": "postmannpat",
+            "protocol": "WPA",
+            "keyManagement": "WPA-PSK",
+            "pairwise": "TKIP",
+            "authorization": "OPEN",
+            "scan_ssid": false
+        }
+    ]
+}
