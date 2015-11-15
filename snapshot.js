@@ -7,6 +7,8 @@ let request = require('./request.js'),
 
 // Collect data and send snapshot
 function takeAndSend () {
+	console.log("Starting snapshot..");
+	
 	return take()
 	.then(function snapshotTaken (data) {
     	return send(data);

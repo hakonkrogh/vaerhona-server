@@ -28,6 +28,8 @@ function takePicture () {
 				}).catch(err => {
 					reject(err);
 				});
+
+				camera.stop();
 			});
 		}
 		else {

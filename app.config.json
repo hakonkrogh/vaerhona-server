@@ -1,5 +1,8 @@
-...http://www.vhsys.no/api/logger_v1.php",
+{
+    "placeId": -1,
+    "logPath": "http://www.vhsys.no/api/logger_v1.php",
     "logInterval": 3600,
+    "apn": "data.tre.dk",
     "wifiNetworks": [
         {
             "Id": "coghNov15",

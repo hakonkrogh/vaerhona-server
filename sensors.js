@@ -9,7 +9,8 @@ let sensorTempHum = (function () {
             temperature: 0,
             humidity: 0
         },
-        initFailed = false;
+        initFailed = false,
+        intervalId;
 
     // Startup
     if (initialize()) {
@@ -20,18 +21,19 @@ let sensorTempHum = (function () {
 
     // Handle ready state
     let ready = new Promise(function (resolve, reject) {
+
+        if (initFailed) {
+            reject('Initialize failed for the temperature and humidity sensor');
+            clearInterval(intervalId);
+        }
         
-        // Get the sensor data every 2 seconds
-        let intervalId = setInterval(function checkInitData () {
+        // Get new sensor data every 2 seconds
+        intervalId = setInterval(function checkInitData () {
             read();
 
-            if (initFailed) {
-                reject('Initialize failed for the temperature and humidity sensor');
-                clearInterval(intervalId);
-            }
-            else if (data.humidity !== 0) {
+            // Resolve the promise if we have a valid humidity (assuming we never reach 0%)
+            if (data.humidity !== 0) {
                 resolve(data);
-                clearInterval(intervalId);
             }
         }, 2000);
     });
