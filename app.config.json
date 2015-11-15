@@ -3,17 +3,5 @@
     "logPath": "{api_path}",
     "logInterval": 3600,
     "apn": "data.tre.dk",
-    "wifiNetworks": [
-        {
-            "Id": "coghNov15",
-            "removeOld": true,
-            "ssid": "cogh",
-            "psk": "postmannpat",
-            "protocol": "WPA",
-            "keyManagement": "WPA-PSK",
-            "pairwise": "TKIP",
-            "authorization": "OPEN",
-            "scan_ssid": false
-        }
-    ]
+    "wifiNetworks": []
 }
