@@ -1,6 +1,6 @@
 {
     "placeId": -1,
-    "logPath": "http://www.vhsys.no/api/logger_v1.php",
+    "logPath": "{api_path}",
     "logInterval": 3600,
     "apn": "data.tre.dk",
     "wifiNetworks": [
