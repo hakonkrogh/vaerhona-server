@@ -6,7 +6,7 @@ export NODE_PATH=$NODE_PATH:/usr/local/lib/node_modules
 
 case "$1" in
   start)
-  exec sudo forever start --sourceDir=/home/pi/vhsys -p /home/pi/vhsys/.tmp-forever --minU$
+  exec sudo forever start --sourceDir=/home/pi/vhsys -p /home/pi/vhsys/.tmp-forever --minUptime 86400000 /home/pi/vhsys/app.js
   ;;
 stop)
   exec sudo forever stop --sourceDir=/home/pi/vhsys app.js
