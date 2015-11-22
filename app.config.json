@@ -1,7 +1,14 @@
 {
     "placeId": -1,
-    "logPath": "{api_path}",
+    "logPath": "...",
     "logInterval": 3600,
-    "apn": "data.tre.dk",
+    "apn": "internet",
+    "image": {
+        "width": 1280,
+        "height": 960,
+        "quality": 25,
+        "timeout": 5000,
+        "format": "jpg"
+    },
     "wifiNetworks": []
 }

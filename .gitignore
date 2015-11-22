@@ -7,3 +7,6 @@ node_modules
 
 # Snapshot file
 snapshot.jpg
+
+# Tmp files
+.tmp-forever

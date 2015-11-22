@@ -1,18 +1,18 @@
 #!/bin/sh
-#/etc/init.d/nodeup
+#/etc/init.d/vhsys
 
 export PATH=$PATH:/usr/local/bin
 export NODE_PATH=$NODE_PATH:/usr/local/lib/node_modules
 
 case "$1" in
   start)
-  exec sudo forever start --sourceDir=/home/pi/vhsys -p /home/pi/vhsys/.tmp-forever --minU$
+  exec sudo forever start --sourceDir=/home/pi/vhsys -p /home/pi/vhsys/.tmp-forever --minUptime 86400000 --silent app.js
   ;;
 stop)
-  exec sudo forever stop --sourceDir=/home/pi/vhsys app.js
+  exec sudo forever stopall
   ;;
 *)
-  echo "Usage: /etc/init.d/nodeup {start|stop}"
+  echo "Usage: /etc/init.d/vhsys {start|stop}"
   exit 1
   ;;
 esac

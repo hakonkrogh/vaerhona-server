@@ -22,9 +22,11 @@ function send (data) {
     };
 
     return new Promise((resolve, reject) => {
+        console.log("Request started", new Date());
     	request(options, function (error, response, body) {
-	        if (!error && response && response.statusCode == 200) {
-	        	resolve("success");
+            console.log("Request finished", new Date());
+	        if (!error && response && response.statusCode == 200 && body && body.success) {
+                resolve(body);
 	        }
 	        else {
 	        	reject(error || "Error");

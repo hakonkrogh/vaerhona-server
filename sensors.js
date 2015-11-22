@@ -4,7 +4,7 @@
 let sensorTempHum = (function () {
 
     let sensor = require('node-dht-sensor'),
-        pinNumber = 18,
+        pinNumber = 23,
         data = {
             temperature: 0,
             humidity: 0
@@ -13,7 +13,7 @@ let sensorTempHum = (function () {
         intervalId;
 
     // Startup
-    if (initialize()) {
+    if (sensor.initialize(22, pinNumber)) {
         read();
     } else {
         initFailed = true;
@@ -27,42 +27,37 @@ let sensorTempHum = (function () {
             clearInterval(intervalId);
         }
         
-        // Get new sensor data every 2 seconds
+        // Pull for sensor data every 1 seconds
         intervalId = setInterval(function checkInitData () {
-            read();
+            read().then(() => {
 
-            // Resolve the promise if we have a valid humidity (assuming we never reach 0%)
-            if (data.humidity !== 0) {
-                resolve(data);
-            }
-        }, 2000);
+                // Resolve the promise if we have a valid humidity (assuming we never reach 0%)
+                if (data.humidity !== 0) {
+                    resolve(data);
+                    clearInterval(intervalId);
+                }
+            });
+        }, 1000);
     });
 
-    function initialize () {
-        return sensor.initialize(22, pinNumber);
-    }
-
     function read () {
-        let readout = sensor.read();
+        return new Promise((resolve, reject) => {
+            let readout = sensor.read();
 
-        data.temperature = parseFloat(readout.temperature.toFixed(2));
-        data.humidity = parseFloat(readout.humidity.toFixed(2));
+            data.temperature = parseFloat(readout.temperature.toFixed(2));
+            data.humidity = parseFloat(readout.humidity.toFixed(2));
 
-        return data;
+            resolve(data);
+        });
     }
 
-    function getTemperature () {
-        return data.temperature;
-    }
-
-    function getHumidity () {
-        return data.humidity;
+    function getData () {
+        return read();
     }
 
     return {
         ready,
-        getTemperature,
-        getHumidity
+        getData
     };
 }());
 
@@ -105,13 +100,14 @@ let sensorPressure = (function () {
 
 // Collects data from all the sensors
 function getData () {
-    let data = {};
-
-    data.temperature = sensorTempHum.getTemperature();
-    data.humidity = sensorTempHum.getHumidity();
+    let data;
 
     return new Promise((resolve, reject) => {
-        sensorPressure.getPressure().then(function gotPressure (pressure) {
+        sensorTempHum.getData().then(_data => {
+            data = _data;
+            return sensorPressure.getPressure();
+        })
+        .then(function gotPressure (pressure) {
             data.pressure = pressure;
             resolve(data);
         }).catch(err => {

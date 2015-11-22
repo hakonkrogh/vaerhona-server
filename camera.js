@@ -2,40 +2,46 @@
 
 let shared = require('./shared.js'),
 	fs = require('fs'),
-	RaspiCam = require('raspicam');
+	RaspiCam = require('raspicam'),
+	configHandler = require('./config.js');
 
 function takePicture () {
-	let filePath = shared.path('snapshot.jpg');
-
-	let camera = new RaspiCam({
-		mode: 'photo',
-		output: filePath,
-		width: 1280,
-		height: 960,
-		quality: 25,
-		timeout: 5000,
-		encoding: 'jpg'
-	});
-
 	return new Promise((resolve, reject) => {
-		if (camera.start()) {
-			camera.on('exit', () => {
-				imageToBase64(filePath).then(base64 => {
-					resolve({
-						filePath,
-						base64
-					});
-				}).catch(err => {
-					reject(err);
-				});
+		
+		let filePath = shared.path('snapshot.jpg');
 
-				camera.stop();
+		configHandler.ready.then(() => {
+			let config = configHandler.getConfig();
+
+			let camera = new RaspiCam({
+				mode: 'photo',
+				output: filePath,
+				width: config.image.width,
+				height: config.image.height,
+				quality: config.image.quality,
+				timeout: config.image.timeout,
+				encoding: config.image.format
 			});
-		}
-		else {
-			reject("Unable to start camera");
-		}
-	});;
+
+			if (camera.start()) {
+				camera.on('exit', () => {
+					imageToBase64(filePath).then(base64 => {
+						resolve({
+							filePath,
+							base64
+						});
+					}).catch(err => {
+						reject(err);
+					});
+
+					camera.stop();
+				});
+			}
+			else {
+				reject("Unable to start camera");
+			}
+		});
+	});
 }
 
 // Take a image file argument and return a base64 string representation

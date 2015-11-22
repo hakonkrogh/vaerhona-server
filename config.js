@@ -17,7 +17,7 @@ let ready = new Promise((resolve, reject) => {
 function readFromFile () {
 	return new Promise((resolve, reject) => {
 		fs.readFile(configPath, 'utf8', function (err, fileContents) {
-			if (err) {
+			if (err !== null) {
 				reject(err);
 			}
 			else {
@@ -30,7 +30,7 @@ function readFromFile () {
 function saveToFile () {
 	return new Promise((resolve, reject) => {
 		fs.writeFile(configPath, JSON.stringify(config, null, 4), function (err) {
-			if (err) {
+			if (err !== null) {
 				reject(err);
 			}
 			else {
@@ -45,7 +45,9 @@ function getConfig () {
 }
 
 function setProp (prop, value) {
-	return config[prop] = value;
+	config[prop] = value;
+
+	return saveToFile();
 }
 
 module.exports = {

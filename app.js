@@ -22,9 +22,10 @@ function startup () {
 	// Schedule snapshot interval
 	setInterval(snapshot.takeAndSend, config.logInterval * 1000);
 
-	// Just output something every 5 minutes, to keep the app alive
-	//setInterval(echo, 60 * 5 * 1000);
-	//function echo () {
-	//	console.log('echo from app', new Date());
-	//}
+	// Echo each 10m
+	setInterval(echo, 60 * 10 * 1000);
+}
+
+function echo () {
+	console.log("Echo from vhsys", new Date());
 }

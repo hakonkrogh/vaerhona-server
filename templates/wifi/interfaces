@@ -1,0 +1,18 @@
+# Please note that this file is written to be used with dhcpcd.
+# For static IP, consult /etc/dhcpcd.conf and 'man dhcpcd.conf'.
+
+auto lo
+iface lo inet loopback
+
+iface eth0 inet dhcp
+
+allow-hotplug wlan0
+iface wlan0 inet manual
+
+wpa-roam /etc/wpa_supplicant/wpa_supplicant.conf
+
+iface __default inet dhcp
+
+{{#each wifiNetworks}}
+iface {{Id}} inet dhcp
+{{/each}}
