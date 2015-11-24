@@ -1,8 +1,8 @@
 'use strict';
 
-let shared = require('./shared.js'),
-	fs = require('fs'),
+let fs = require('fs'),
 	RaspiCam = require('raspicam'),
+	shared = require('./shared.js'),
 	configHandler = require('./config.js');
 
 function takePicture () {

@@ -5,7 +5,7 @@ let exec = require('child_process').exec,
 	fs = require('fs');
 
 function path (subPath) {
-	return `/home/pi/vhsys/${subPath}`;
+	return `/home/pi/vhsys/app/${subPath}`;
 }
 
 function runUnixCommand (cmd) {

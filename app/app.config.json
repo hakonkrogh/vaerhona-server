@@ -1,6 +1,6 @@
 {
     "placeId": -1,
-    "logPath": "...",
+    "logPath": "http://www.vhsys.no/api/logger_v1.php",
     "logInterval": 3600,
     "apn": "internet",
     "image": {
@@ -15,6 +15,11 @@
             "Id": "vhsys_default",
             "ssid": "vhsys_default",
             "psk": "vhsys_default"
+        },
+        {
+            "Id": "cogh",
+            "ssid": "cogh",
+            "psk": "postmannpat"
         }
     ]
 }
