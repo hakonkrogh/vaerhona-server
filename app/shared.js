@@ -23,7 +23,9 @@ function runUnixCommand (cmd) {
 
 function reboot () {
 	console.log("Rebooting...");
-	return runUnixCommand('sudo reboot');
+	return runUnixCommand('sudo reboot').cath(err => {
+		console.error(err);
+	});
 }
 
 // Takes an array of files to update, and the template data to use

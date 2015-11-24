@@ -3,22 +3,23 @@
 let request = require('./request.js'),
 	camera = require('./camera.js'),
 	sensors = require('./sensors.js'),
+	version = require('./app.version.js'),
 	configHandler = require('./config.js'),
 	wifiConfig = require('./config.wifi.js'),
 	cellularConfig = require('./config.cellular.js');
 
 // Collect data and send snapshot
 function takeAndSend () {
-	console.log("Starting snapshot..");
+	console.log("Starting snapshot..", new Date());
 
 	return take()
 	.then(function snapshotTaken (data) {
-    	return send(data);
+    	return request.send(data);
     }).then(responseBody => {
-    	console.log('Snapshot logged', new Date());
+    	console.log('Snapshot finished', new Date());
     	handleResponseBody(responseBody);
     }).catch(err => {
-    	console.error('Snapshot not logged', err);
+    	console.error('An error occured during snapshot', err.stack);
     });
 }
 
@@ -29,7 +30,10 @@ function take () {
 
 		camera.takePicture()
 		.then(function gotPicture (image) {
+			
+			// Store the base64 string of the image temporarily
 			imageBase64String = image.base64;
+			
 			return sensors.getData();
 	    }).then(function gotSensorData (sensorData) {
 
@@ -43,26 +47,12 @@ function take () {
 	});
 }
 
-function send (snapshotData) {
-
-	let config = configHandler.getConfig();
-
-	// Extend data with place id
-    snapshotData.placeId =  config.placeId;
-	
-	// Add IDs for all added wifi networks
-    snapshotData.wifiNetworks = config.wifiNetworks.map(item => {
-    	return item.Id;
-    });
-
-    return request.send(snapshotData);
-}
-
 // Handle the response from the API
 function handleResponseBody (body) {
 	
 	let config = configHandler.getConfig();
 
+	// New API log path
 	if (body.newLogPath) {
 	    return configHandler.setProp("logPath", body.newLogPath).then(() => {
 	        console.log("New log path: ", config.logPath);
@@ -70,6 +60,7 @@ function handleResponseBody (body) {
 	    });
 	}
 
+	// New cellular APN key
 	else if (body.newAPN) {
 		return cellularConfig.changeAPN(body.newAPN).then(() => {
 	    	console.log("New apn: ", config.apn);
@@ -85,10 +76,16 @@ function handleResponseBody (body) {
 	    });
 	}
 
-	// New firmware
-	//else if (body.coreUpdate) {
-	//    coreUpdate(body.coreUpdate);
-	//}
+	// New app version
+	else if (body.appUpdate) {
+		console.log("App update available. Downloading and installing...");
+		version.update(body.appUpdate.path).then(() => {
+			return configHandler.setProp("appVersion", body.appUpdate.version);
+		}).then(() => {
+			console.log(`App updated to version ${body.appUpdate.version}!`);
+			shared.reboot();
+		});
+	}
 
 	// General maintenance
 	else if (body.reboot) {
@@ -98,6 +95,5 @@ function handleResponseBody (body) {
 
 module.exports = {
 	take,
-	send,
 	takeAndSend
 };

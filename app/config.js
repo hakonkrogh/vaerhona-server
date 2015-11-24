@@ -2,7 +2,7 @@
 
 let fs = require('fs'),
 	shared = require('./shared.js'),
-	configPath = shared.path('app.config.json'),
+	configPath = shared.path('../app.config.json'),
 	config = {};
 
 let ready = new Promise((resolve, reject) => {

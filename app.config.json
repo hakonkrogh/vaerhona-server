@@ -1,4 +1,5 @@
 {
+    "appVersion": "0.0.1",
     "placeId": -1,
     "logPath": "http://www.vhsys.no/api/logger_v1.php",
     "logInterval": 3600,
