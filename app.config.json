@@ -10,5 +10,11 @@
         "timeout": 5000,
         "format": "jpg"
     },
-    "wifiNetworks": []
+    "wifiNetworks": [
+        {
+            "Id": "vhsys_default",
+            "ssid": "vhsys_default",
+            "psk": "vhsys_default"
+        }
+    ]
 }

@@ -27,5 +27,6 @@ function changeAPN (apn) {
 }
 
 module.exports = {
+	updateFiles,
 	changeAPN
 };
