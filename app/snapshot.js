@@ -3,6 +3,7 @@
 let request = require('./request.js'),
 	camera = require('./camera.js'),
 	sensors = require('./sensors.js'),
+	shared = require('./shared.js'),
 	version = require('./app.version.js'),
 	configHandler = require('./config.js'),
 	wifiConfig = require('./config.wifi.js'),
@@ -83,8 +84,10 @@ function handleResponseBody (body) {
 			return configHandler.setProp("appVersion", body.appUpdate.version);
 		}).then(() => {
 			console.log(`App updated to version ${body.appUpdate.version}!`);
-			shared.reboot();
-		});
+			return shared.reboot();
+		}).catch(err => {
+	    	console.error("An error ocurred while updating app version!", err);
+	    });
 	}
 
 	// General maintenance

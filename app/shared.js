@@ -23,7 +23,7 @@ function runUnixCommand (cmd) {
 
 function reboot () {
 	console.log("Rebooting...");
-	return runUnixCommand('sudo reboot').cath(err => {
+	return runUnixCommand('sudo reboot').catch(err => {
 		console.error(err);
 	});
 }
