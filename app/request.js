@@ -30,18 +30,17 @@ function send (data) {
         uri: config.logPath,
         method: 'POST',
         gzip: true,
-        json: data
+        json: data,
+        timeout: 60 * 5 * 1000
     };
 
     return new Promise((resolve, reject) => {
-        console.log("Request started", new Date());
-    	request(options, function (error, response, body) {
-            console.log("Request finished", new Date());
-	        if (!error && response && response.statusCode == 200 && body && body.success) {
+    	request(options, function (error, httpResponse, body) {
+	        if (!error && httpResponse && httpResponse.statusCode == 200 && body && body.success) {
                 resolve(body);
 	        }
 	        else {
-	        	reject(error || "Error");
+	        	reject(error || httpResponse.statusMessage);
 	        }
 	    });
     });

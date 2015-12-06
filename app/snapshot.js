@@ -20,7 +20,7 @@ function takeAndSend () {
     	console.log('Snapshot finished', new Date());
     	handleResponseBody(responseBody);
     }).catch(err => {
-    	console.error('An error occured during snapshot', err.stack);
+    	console.error('An error occured during snapshot', err);
     });
 }
 
