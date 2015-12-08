@@ -9,7 +9,8 @@
         "height": 960,
         "quality": 25,
         "timeout": 5000,
-        "format": "jpg"
+        "format": "jpg",
+        "rotation": 180
     },
     "wifiNetworks": [
         {

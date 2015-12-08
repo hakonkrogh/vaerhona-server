@@ -20,7 +20,8 @@ function takePicture () {
 				height: config.image.height,
 				quality: config.image.quality,
 				timeout: config.image.timeout,
-				encoding: config.image.format
+				encoding: config.image.format,
+				rotation: config.image.rotation
 			});
 
 			if (camera.start()) {
