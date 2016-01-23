@@ -1,11 +1,11 @@
 'use strict';
 
 let configHandler = require('./config.js'),
-	request = require('request');
+    request = require('request');
 
 function send (data) {
 
-	let config = configHandler.getConfig();
+    let config = configHandler.getConfig();
 
     // Make sure we conform to whatever the API expects
     data.motionEvent = false;
@@ -25,74 +25,44 @@ function send (data) {
     // Pass on the app version for possible update
     data.appVersion = config.appVersion;
 
-    // No motion detection (deprecated)
-    data.motionEvent = false;
-    data.motionVersion = -1;
-
     // Setup request
     var options = {
         uri: config.logPath,
         method: 'POST',
         gzip: true,
-        json: data
+        json: data,
+        timeout: 60 * 5 * 1000
     };
 
-    // Split request into multiple request parts
-    let parts = 4;
-    let partsIndex = 0;
-    let imageParts = chunkString(data.image, data.image.length / parts);
+    // Keep track of attempts
+    let attempts = 0;
 
     return new Promise((resolve, reject) => {
-        console.log("Request started", new Date());
+        (function attemptToSendRequest () {
+            attempts++;
 
-        if (imageParts == null) {
-            return reject("Error. Could not split string");
-        }
-
-        sendNextPart();
-        function sendNextPart () {
-            console.log('Send part', partsIndex + 1, '...');
-
-            let imagePartsObj = {
-                parts,
-                partsIndex,
-                part: imageParts[partsIndex]
-            };
-
-            data.image = imagePartsObj;
-
+            console.log(`Request started ${new Date()}`);
             request(options, function (error, httpResponse, body) {
                 
-                if (error) {
-                    return reject(error);
+                // Request completed (200) and no error occured at API
+                if (!error && httpResponse && httpResponse.statusCode == 200 && body && body.success) {
+                    resolve(body);
                 }
-
-                if (httpResponse && httpResponse.statusCode == 200 && body && body.success) {
-                    if (partsIndex === parts) {
-                        console.log("Request finished", new Date());
-                        resolve(body);
+                // Request/API failed
+                else {
+                    if (attempts < 3) {
+                        console.log(`Request attempt ${attempts} failed ("${error}"). Trying again.`);
+                        attemptToSendRequest();
                     }
                     else {
-                        partsIndex++;
-
-                        data.snapshotid = body.snapshotid;
-
-                        sendNextPart();
+                        reject(error || httpResponse.statusMessage);
                     }
                 }
-                else {
-                    console.log(httpResponse.statusMessage, body);
-                    return reject(httpResponse ? httpResponse.statusMessage : "Unkown error");
-                }
             });
-        }
+        }());
     });
 }
 
-function chunkString (str, chunkSize) {
-  return str.match(new RegExp('.{1,' + chunkSize + '}', 'g'));
-}
-
 module.exports = {
-	send
+    send
 };
