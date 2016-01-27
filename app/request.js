@@ -1,7 +1,8 @@
 'use strict';
 
 let configHandler = require('./config.js'),
-    request = require('request');
+    request = require('request'),
+    shared = require('./shared.js');
 
 function send (data) {
 
@@ -50,12 +51,25 @@ function send (data) {
                 }
                 // Request/API failed
                 else {
-                    if (attempts < 3) {
-                        console.log(`Request attempt ${attempts} failed ("${error}"). Trying again.`);
-                        attemptToSendRequest();
+                    console.log(`Request attempt ${attempts} failed ("${error}").`);
+
+                    // If we reach 10 failed attempts, then we will do a reboot
+                    // This might indicate that the 3G card has stopped working
+                    if (attempts > 10) {
+                        console.log(`Rebooting...`);
+                        shared.reboot();
                     }
                     else {
-                        reject(error || httpResponse.statusMessage);
+
+                        console.log(`Trying again.`);
+
+                        // If we reach 5 failed attempts, lets wait for 1 minute before trying again
+                        else if (attempts === 5) {
+                            setTimeout(attemptToSendRequest, 1000 * 60);
+                        }
+                        else {
+                            attemptToSendRequest();
+                        }
                     }
                 }
             });
