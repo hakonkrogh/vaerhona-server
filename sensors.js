@@ -15,8 +15,8 @@ async function readSensorValues() {
       22, // Type
       4 // Pin
     );
-    values.temperature = dht22values.temperature.toFixed(1);
-    values.humidity = dht22values.humidity.toFixed(0);
+    values.temperature = parseFloat(dht22values.temperature.toFixed(1));
+    values.humidity = parseInt(dht22values.humidity);
   } catch (e) {}
 }
 

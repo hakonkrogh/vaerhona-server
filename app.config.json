@@ -1,9 +1,0 @@
-{
-    "wifi": [
-        {
-            "Id": "vaerhona_default",
-            "ssid": "vaerhona_default",
-            "psk": "vaerhona_default"
-        }
-    ]
-}

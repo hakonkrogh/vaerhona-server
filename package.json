@@ -2,6 +2,7 @@
   "dependencies": {
     "bleno": "github:hakonkrogh/bleno",
     "dotenv": "^10.0.0",
+    "forever-monitor": "^3.0.3",
     "node-dht-sensor": "^0.4.3",
     "node-fetch": "^2.6.1",
     "pi-camera-connect": "^0.3.4",

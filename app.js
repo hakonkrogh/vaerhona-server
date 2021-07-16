@@ -1,10 +1,6 @@
 require("dotenv").config();
 
-const fs = require("fs");
-
-const config = JSON.parse(fs.readFileSync("./app.config.json", "utf-8"));
-
-// Set BOX_ID on first boot
+// Set BOX_ID
 if (!process.env.BOX_ID) {
   const { exec } = require("child_process");
   exec(
@@ -14,7 +10,6 @@ if (!process.env.BOX_ID) {
         throw new Error(err || stderr);
       } else {
         process.env.BOX_ID = stdout;
-        fs.writeFileSync("./.env", `BOX_ID=${stdout}`);
         boot();
       }
     }
@@ -24,6 +19,9 @@ if (!process.env.BOX_ID) {
 }
 
 function boot() {
-  // require("./logger")(config);
-  require("./blue-new/index.js")(config);
+  const logger = require("./logger");
+  require("./bluetooth.js")();
+
+  logger();
+  setInterval(logger, 1000 * 60 * 60);
 }

@@ -13,21 +13,15 @@
  */
 
 // Using the bleno module
-var bleno = require("bleno");
+const bleno = require("bleno");
+const fs = require("fs");
+const { exec } = require("child_process");
 
-const sensors = require("../sensors");
+const sensors = require("./sensors");
+const logger = require("./logger");
 
-function ab2str(buf) {
-  return String.fromCharCode.apply(null, new Uint16Array(buf));
-}
-function str2ab(str) {
-  var buf = new ArrayBuffer(str.length * 2); // 2 bytes for each char
-  var bufView = new Uint16Array(buf);
-  for (var i = 0, strLen = str.length; i < strLen; i++) {
-    bufView[i] = str.charCodeAt(i);
-  }
-  return buf;
-}
+const messageQueue = [];
+const tx = new TextDecoder("utf-8");
 
 function getSensorReadingMessage() {
   return {
@@ -36,12 +30,69 @@ function getSensorReadingMessage() {
   };
 }
 
-function getWifiSettings() {
-  return "n/a";
+const wifiSettings = {
+  path: "/etc/wpa_supplicant/wpa_supplicant.conf",
+  get() {
+    const content = fs.readFileSync(this.path, "utf-8");
+
+    const [ssid, psk] = content
+      .split("network={")[1]
+      .split("}")[0]
+      .split("\n")
+      .map((a) => a.trim())
+      .filter(Boolean)
+      .map((a) => a.split('"')[1]);
+    console.log({ ssid, psk });
+    return { ssid, psk };
+  },
+  set(wifi) {
+    const content = `ctrl_interface=DIR=/var/run/wpa_supplicant GROUP=netdev
+update_config=1
+    
+network={
+  ssid="${wifi.ssid}"
+  psk="${wifi.psk}"
+}`;
+    fs.writeFileSync(this.path, content);
+
+    messageQueue.push({
+      action: "wifi-settings",
+      data: wifiSettings.get(),
+    });
+
+    setTimeout(reboot, 1000);
+  },
+};
+
+function reboot() {
+  bashCmd("sudo /bin/systemctl reboot");
 }
 
-module.exports = function init() {
-  const uuid = "601202ac-16d1-4f74-819d-85788a5ad77a";
+function shutdown() {
+  bashCmd("sudo /bin/systemctl poweroff");
+}
+
+function firmwareUpdate() {
+  bashCmd(
+    "git fetch origin && git reset --hard origin/main && npm install && sudo /bin/systemctl reboot"
+  );
+}
+
+function bashCmd(cmd) {
+  exec(cmd, (err, stdout, stderr) => {
+    if (err) {
+      console.error(err);
+    } else {
+      console.log(`stdout: ${stdout}`);
+      console.log(`stderr: ${stderr}`);
+    }
+  });
+}
+
+const uuid = "601202ac-16d1-4f74-819d-85788a5ad77a";
+
+function init() {
+  console.log(`Starting up bluetooth with uuid ${uuid}`);
 
   // Once bleno starts, begin advertising our BLE address
   bleno.on("stateChange", function (state) {
@@ -62,9 +113,6 @@ module.exports = function init() {
   bleno.on("disconnect", function (clientAddress) {
     console.log("Disconnected from address: " + clientAddress);
   });
-
-  const messageQueue = [];
-  const tx = new TextDecoder("utf-8");
 
   // When we begin advertising, create a new service and characteristic
   bleno.on("advertisingStart", function (error) {
@@ -140,13 +188,32 @@ module.exports = function init() {
                   console.log(dataAsString);
 
                   const json = JSON.parse(dataAsString);
-
                   switch (json.action) {
                     case "get-wifi": {
                       messageQueue.push({
                         action: "wifi-settings",
-                        data: getWifiSettings(),
+                        data: wifiSettings.get(),
                       });
+                      break;
+                    }
+                    case "set-wifi": {
+                      wifiSettings.set(json.data);
+                      break;
+                    }
+                    case "firmware-update": {
+                      firmwareUpdate();
+                      break;
+                    }
+                    case "reboot": {
+                      reboot();
+                      break;
+                    }
+                    case "shutdown": {
+                      shutdown();
+                      break;
+                    }
+                    case "take-snapshot": {
+                      logger();
                       break;
                     }
                   }
@@ -162,4 +229,6 @@ module.exports = function init() {
       ]);
     }
   });
-};
+}
+
+module.exports = init;
