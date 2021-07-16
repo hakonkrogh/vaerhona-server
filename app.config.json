@@ -1,22 +1,9 @@
 {
-    "appVersion": "0.0.1",
-    "placeId": -1,
-    "logPath": "...",
-    "logInterval": 3600,
-    "apn": "internet",
-    "image": {
-        "width": 1280,
-        "height": 960,
-        "quality": 25,
-        "timeout": 5000,
-        "format": "jpg",
-        "rotation": 180
-    },
-    "wifiNetworks": [
+    "wifi": [
         {
-            "Id": "vhsys_default",
-            "ssid": "vhsys_default",
-            "psk": "vhsys_default"
+            "Id": "vaerhona_default",
+            "ssid": "vaerhona_default",
+            "psk": "vaerhona_default"
         }
     ]
 }

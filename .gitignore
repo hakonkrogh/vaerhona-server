@@ -10,3 +10,6 @@ snapshot.jpg
 
 # Tmp files
 .tmp-forever
+
+# Env
+.env

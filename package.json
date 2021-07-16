@@ -1,10 +1,13 @@
 {
   "dependencies": {
-    "bmp085": "https://github.com/hakonhk/bmp085",
-    "handlebars": "^4.0.4",
-    "node-dht-sensor": "0.0.8",
-    "raspicam": "^0.2.13",
-    "request": "^2.65.0",
-    "tar.gz": "^1.0.2"
+    "bleno": "github:hakonkrogh/bleno",
+    "dotenv": "^10.0.0",
+    "node-dht-sensor": "^0.4.3",
+    "node-fetch": "^2.6.1",
+    "pi-camera-connect": "^0.3.4",
+    "sharp": "^0.28.3"
+  },
+  "scripts": {
+    "start": "node app.js"
   }
 }
