@@ -11,6 +11,7 @@ async function logger() {
     const stillCamera = new StillCamera({
       width: 1920,
       height: 1080,
+      delay: 5000,
     });
     const image = await stillCamera.takeImage();
 
