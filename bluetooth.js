@@ -1,21 +1,7 @@
-/**
- * Simple bleno echo server
- * Author: Shawn Hymel
- * Date: November 22, 2015
- *
- * Creates a Bluetooth Low Energy device using bleno and offers one service
- * with one characteristic. Users can use a BLE test app to read, write, and
- * subscribe to that characteristic. Writing changes the characteristic's
- * value, reading returns that value, and subscribing results in a string
- * message every 1 second.
- *
- * This example is Beerware (https://en.wikipedia.org/wiki/Beerware).
- */
-
-// Using the bleno module
 const bleno = require("bleno");
 const fs = require("fs");
 const { exec } = require("child_process");
+const fetch = require("node-fetch");
 
 const sensors = require("./sensors");
 const logger = require("./logger");
@@ -29,6 +15,22 @@ function getSensorReadingMessage() {
     data: sensors.getValues(),
   };
 }
+
+let isOnline = false;
+async function getOnlineStatus() {
+  try {
+    const response = await fetch("https://google.com");
+
+    isOnline = response.ok;
+  } catch (e) {
+    console.log(e);
+    isOnline = false;
+  }
+
+  return isOnline;
+}
+
+setTimeout(getOnlineStatus, 2000);
 
 const wifiSettings = {
   path: "/etc/wpa_supplicant/wpa_supplicant.conf",
@@ -198,6 +200,13 @@ function init() {
                     }
                     case "set-wifi": {
                       wifiSettings.set(json.data);
+                      break;
+                    }
+                    case "get-online": {
+                      messageQueue.push({
+                        action: "is-online",
+                        data: isOnline,
+                      });
                       break;
                     }
                     case "firmware-update": {
