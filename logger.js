@@ -25,6 +25,7 @@ async function logger() {
     console.log("will send");
     console.log("--image with length", imageBase64.length);
     console.log("--sensors", JSON.stringify(sensors.getValues()));
+    console.log("--boxId", process.env.BOX_ID);
 
     function send(domain) {
       return fetch(`${domain}/api/graphql`, {
