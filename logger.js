@@ -22,6 +22,10 @@ async function logger() {
       .toBuffer();
     const imageBase64 = imageCompressed.toString("base64");
 
+    console.log("will send");
+    console.log("--image with length", imageBase64.length);
+    console.log("--sensors", JSON.stringify(sensors.getValues()));
+
     function send(domain) {
       return fetch(`${domain}/api/graphql`, {
         method: "POST",
