@@ -4,7 +4,7 @@ dotenv.config();
 
 import { execa } from "execa";
 
-import { logger } from "./logger";
+import { logger } from "./logger.js";
 import { bleInit } from "./bluetooth.js";
 
 async function boot() {

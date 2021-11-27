@@ -3,7 +3,7 @@ import { execa } from "execa";
 import sharp from "sharp";
 import fs from "fs/promises";
 
-import { getSensorValues } from "./sensors";
+import { getSensorValues } from "./sensors.js";
 
 const apis = ["https://xn--vrhna-sra2k.no", "https://vhbackup.kroghweb.no"];
 
