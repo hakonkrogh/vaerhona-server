@@ -1,4 +1,5 @@
 {
+  "type": "module",
   "dependencies": {
     "bleno": "github:hakonkrogh/bleno",
     "dotenv": "^10.0.0",
