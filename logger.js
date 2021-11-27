@@ -1,6 +1,7 @@
 const fetch = require("node-fetch");
-const { StillCamera } = require("pi-camera-connect");
+const execa = require("execa");
 const sharp = require("sharp");
+const fs = require("fs/promises");
 
 const sensors = require("./sensors");
 
@@ -8,12 +9,8 @@ const apis = ["https://xn--vrhna-sra2k.no", "https://vhbackup.kroghweb.no"];
 
 async function logger() {
   try {
-    const stillCamera = new StillCamera({
-      width: 1920,
-      height: 1080,
-      delay: 5000,
-    });
-    const image = await stillCamera.takeImage();
+    await execa("libcamera-jpeg", ["-o snapshot.jpg -n"]);
+    const image = await fs.readFile("./snapshot.jpg");
 
     const imageCompressed = await sharp(image)
       .jpeg({
