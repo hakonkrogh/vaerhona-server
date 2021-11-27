@@ -9,7 +9,7 @@ const apis = ["https://xn--vrhna-sra2k.no", "https://vhbackup.kroghweb.no"];
 
 export async function logger() {
   try {
-    await execa("libcamera-jpeg", ["-o snapshot.jpg -n"]);
+    await execa("libcamera-jpeg", ["-o", "snapshot.jpg", "-n"]);
     const image = await fs.readFile("./snapshot.jpg");
 
     const imageCompressed = await sharp(image)
