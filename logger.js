@@ -1,9 +1,9 @@
-const fetch = require("node-fetch");
-const execa = require("execa");
-const sharp = require("sharp");
-const fs = require("fs/promises");
+import fetch from "node-fetch";
+import { execa } from "execa";
+import sharp from "sharp";
+import fs from "fs/promises";
 
-const sensors = require("./sensors");
+import sensors from "./sensors";
 
 const apis = ["https://xn--vrhna-sra2k.no", "https://vhbackup.kroghweb.no"];
 
