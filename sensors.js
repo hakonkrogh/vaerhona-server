@@ -1,11 +1,13 @@
-const dht22 = require("node-dht-sensor").promises;
+import dht22Module from "node-dht-sensor";
+
+const dht22 = dht22Module.promises;
 
 const values = {
   temperature: 0,
   humidity: 0,
 };
 
-function getValues() {
+export function getSensorValues() {
   return values;
 }
 
@@ -22,7 +24,3 @@ async function readSensorValues() {
 
 readSensorValues();
 setInterval(readSensorValues, 1000);
-
-module.exports = {
-  getValues,
-};

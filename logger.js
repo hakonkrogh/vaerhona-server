@@ -3,11 +3,11 @@ import { execa } from "execa";
 import sharp from "sharp";
 import fs from "fs/promises";
 
-import sensors from "./sensors";
+import { getSensorValues } from "./sensors";
 
 const apis = ["https://xn--vrhna-sra2k.no", "https://vhbackup.kroghweb.no"];
 
-async function logger() {
+export async function logger() {
   try {
     await execa("libcamera-jpeg", ["-o snapshot.jpg -n"]);
     const image = await fs.readFile("./snapshot.jpg");
@@ -44,7 +44,7 @@ async function logger() {
             input: {
               boxId: process.env.BOX_ID,
               image: imageBase64,
-              ...sensors.getValues(),
+              ...getSensorValues(),
             },
           },
         }),
@@ -73,5 +73,3 @@ async function logger() {
     console.log(e);
   }
 }
-
-module.exports = logger;

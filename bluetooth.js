@@ -1,10 +1,10 @@
-const bleno = require("bleno");
-const fs = require("fs");
-const { exec } = require("child_process");
-const fetch = require("node-fetch");
+import bleno from "bleno";
+import fs from "fs";
+import { exec } from "child_process";
+import fetch from "node-fetch";
 
-const sensors = require("./sensors");
-const logger = require("./logger");
+import sensors from "./sensors";
+import logger from "./logger";
 
 const messageQueue = [];
 const tx = new TextDecoder("utf-8");
@@ -93,7 +93,7 @@ function bashCmd(cmd) {
 
 const uuid = "601202ac-16d1-4f74-819d-85788a5ad77a";
 
-function init() {
+export function bleInit() {
   console.log(`Starting up bluetooth with uuid ${uuid}`);
 
   // Once bleno starts, begin advertising our BLE address
@@ -239,5 +239,3 @@ function init() {
     }
   });
 }
-
-module.exports = init;
