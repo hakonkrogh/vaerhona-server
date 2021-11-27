@@ -3,8 +3,8 @@ import fs from "fs";
 import { exec } from "child_process";
 import fetch from "node-fetch";
 
-import sensors from "./sensors.js";
-import logger from "./logger.js";
+import { getSensorValues } from "./sensors.js";
+import { logger } from "./logger.js";
 
 const messageQueue = [];
 const tx = new TextDecoder("utf-8");
@@ -12,7 +12,7 @@ const tx = new TextDecoder("utf-8");
 function getSensorReadingMessage() {
   return {
     action: "sensor-reading",
-    data: sensors.getValues(),
+    data: getSensorValues(),
   };
 }
 
