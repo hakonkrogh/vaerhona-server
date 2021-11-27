@@ -2,19 +2,19 @@
 import dotenv from "dotenv";
 dotenv.config();
 
-import { execa } from "execa";
+import fs from "fs/promises";
+import { v4 as uuidv4 } from "uuid";
 
 import { logger } from "./logger.js";
 import { bleInit } from "./bluetooth.js";
 
 async function boot() {
-  // Get BOX_ID
+  // Get/set BOX_ID
   if (!process.env.BOX_ID) {
-    const { stdout } = await execa("cat", [
-      " /proc/cpuinfo | grep Serial | cut -d ' ' -f 2'",
-    ]);
+    const BOX_ID = uuidv4();
+    await fs.writeFile("./.env", "BOX_ID=" + BOX_ID);
 
-    process.env.BOX_ID = stdout;
+    process.env.BOX_ID = BOX_ID;
     startApp();
   } else {
     startApp();
