@@ -160,10 +160,12 @@ export function bleInit() {
                 );
                 sendSensorReading();
 
-                messageQueue.push({
-                  action: "box-id",
-                  data: process.env.BOX_ID,
-                });
+                setTimeout(() => {
+                  messageQueue.push({
+                    action: "box-id",
+                    data: process.env.BOX_ID,
+                  });
+                }, 1000);
               },
 
               // If the client unsubscribes, we stop broadcasting the message
