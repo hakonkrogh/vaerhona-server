@@ -159,6 +159,11 @@ export function bleInit() {
                   5000
                 );
                 sendSensorReading();
+
+                messageQueue.push({
+                  action: "box-id",
+                  data: process.env.BOX_ID,
+                });
               },
 
               // If the client unsubscribes, we stop broadcasting the message
@@ -195,13 +200,6 @@ export function bleInit() {
                       messageQueue.push({
                         action: "wifi-settings",
                         data: wifiSettings.get(),
-                      });
-                      break;
-                    }
-                    case "get-box-id": {
-                      messageQueue.push({
-                        action: "box-id",
-                        data: process.env.BOX_ID,
                       });
                       break;
                     }
