@@ -198,6 +198,13 @@ export function bleInit() {
                       });
                       break;
                     }
+                    case "get-box-id": {
+                      messageQueue.push({
+                        action: "box-id",
+                        data: process.env.BOX_ID,
+                      });
+                      break;
+                    }
                     case "set-wifi": {
                       wifiSettings.set(json.data);
                       break;
