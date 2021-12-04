@@ -1,19 +1,16 @@
-const fetch = require("node-fetch");
-const { StillCamera } = require("pi-camera-connect");
-const sharp = require("sharp");
+import fetch from "node-fetch";
+import { execa } from "execa";
+import sharp from "sharp";
+import fs from "fs/promises";
 
-const sensors = require("./sensors");
+import { getSensorValues } from "./sensors.js";
 
 const apis = ["https://xn--vrhna-sra2k.no", "https://vhbackup.kroghweb.no"];
 
-async function logger() {
+export async function logger() {
   try {
-    const stillCamera = new StillCamera({
-      width: 1920,
-      height: 1080,
-      delay: 5000,
-    });
-    const image = await stillCamera.takeImage();
+    await execa("libcamera-jpeg", ["-o", "snapshot.jpg", "-n"]);
+    const image = await fs.readFile("./snapshot.jpg");
 
     const imageCompressed = await sharp(image)
       .jpeg({
@@ -24,7 +21,7 @@ async function logger() {
 
     console.log("will send");
     console.log("--image with length", imageBase64.length);
-    console.log("--sensors", JSON.stringify(sensors.getValues()));
+    console.log("--sensors", JSON.stringify(getSensorValues()));
     console.log("--boxId", process.env.BOX_ID);
 
     function send(domain) {
@@ -47,7 +44,7 @@ async function logger() {
             input: {
               boxId: process.env.BOX_ID,
               image: imageBase64,
-              ...sensors.getValues(),
+              ...getSensorValues(),
             },
           },
         }),
@@ -76,5 +73,3 @@ async function logger() {
     console.log(e);
   }
 }
-
-module.exports = logger;

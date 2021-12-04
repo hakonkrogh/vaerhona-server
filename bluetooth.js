@@ -1,10 +1,10 @@
-const bleno = require("bleno");
-const fs = require("fs");
-const { exec } = require("child_process");
-const fetch = require("node-fetch");
+import bleno from "bleno";
+import fs from "fs";
+import { exec } from "child_process";
+import fetch from "node-fetch";
 
-const sensors = require("./sensors");
-const logger = require("./logger");
+import { getSensorValues } from "./sensors.js";
+import { logger } from "./logger.js";
 
 const messageQueue = [];
 const tx = new TextDecoder("utf-8");
@@ -12,7 +12,7 @@ const tx = new TextDecoder("utf-8");
 function getSensorReadingMessage() {
   return {
     action: "sensor-reading",
-    data: sensors.getValues(),
+    data: getSensorValues(),
   };
 }
 
@@ -93,7 +93,7 @@ function bashCmd(cmd) {
 
 const uuid = "601202ac-16d1-4f74-819d-85788a5ad77a";
 
-function init() {
+export function bleInit() {
   console.log(`Starting up bluetooth with uuid ${uuid}`);
 
   // Once bleno starts, begin advertising our BLE address
@@ -159,6 +159,13 @@ function init() {
                   5000
                 );
                 sendSensorReading();
+
+                setTimeout(() => {
+                  messageQueue.push({
+                    action: "box-id",
+                    data: process.env.BOX_ID,
+                  });
+                }, 1000);
               },
 
               // If the client unsubscribes, we stop broadcasting the message
@@ -239,5 +246,3 @@ function init() {
     }
   });
 }
-
-module.exports = init;

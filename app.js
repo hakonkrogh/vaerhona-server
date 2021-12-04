@@ -1,27 +1,30 @@
-require("dotenv").config();
+// require("dotenv").config();
+import dotenv from "dotenv";
+dotenv.config();
 
-// Set BOX_ID
-if (!process.env.BOX_ID) {
-  const { exec } = require("child_process");
-  exec(
-    "cat /proc/cpuinfo | grep Serial | cut -d ' ' -f 2",
-    (err, stdout, stderr) => {
-      if (err || stderr) {
-        throw new Error(err || stderr);
-      } else {
-        process.env.BOX_ID = stdout;
-        boot();
-      }
-    }
-  );
-} else {
-  boot();
+import fs from "fs/promises";
+import { v4 as uuidv4 } from "uuid";
+
+import { logger } from "./logger.js";
+import { bleInit } from "./bluetooth.js";
+
+async function boot() {
+  // Get/set BOX_ID
+  if (!process.env.BOX_ID) {
+    const BOX_ID = uuidv4();
+    await fs.writeFile("./.env", "BOX_ID=" + BOX_ID);
+
+    process.env.BOX_ID = BOX_ID;
+    startApp();
+  } else {
+    startApp();
+  }
 }
 
-function boot() {
-  const logger = require("./logger");
-  require("./bluetooth.js")();
+boot();
 
+function startApp() {
   logger();
+  bleInit();
   setInterval(logger, 1000 * 60 * 60);
 }
