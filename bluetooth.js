@@ -80,6 +80,9 @@ function firmwareUpdate() {
   );
 }
 
+// Do a firmware update every 3 months-ish
+setTimeout(firmwareUpdate, 1000 * 60 * 60 * 24 * 30 * 3);
+
 function bashCmd(cmd) {
   exec(cmd, (err, stdout, stderr) => {
     if (err) {
