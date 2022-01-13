@@ -19,7 +19,14 @@ function getSensorReadingMessage() {
 let isOnline = false;
 async function getOnlineStatus() {
   try {
-    const response = await fetch("https://google.com");
+    const response = await fetch("https://xn--vrhna-sra2k.no/api/graphql", {
+      headers: {
+        accept: "*/*",
+        "content-type": "application/json",
+      },
+      body: '{"operationName":null,"variables":{},"query":"{\\n  __typename\\n}\\n"}',
+      method: "POST",
+    });
 
     isOnline = response.ok;
   } catch (e) {
