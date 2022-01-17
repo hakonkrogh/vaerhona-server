@@ -76,12 +76,12 @@ function shutdown() {
 
 function firmwareUpdate() {
   bashCmd(
-    "git fetch origin && git reset --hard origin/main && npm install && sudo /bin/systemctl reboot"
+    "git fetch origin && git reset --hard origin/main && npm install && sudo apt update && sudo apt upgrade && sudo /bin/systemctl reboot"
   );
 }
 
 // Do a firmware update every 3 months-ish
-setTimeout(firmwareUpdate, 1000 * 60 * 60 * 24 * 30 * 3);
+// setTimeout(firmwareUpdate, 1000 * 60 * 60 * 24 * 30 * 3);
 
 function bashCmd(cmd) {
   exec(cmd, (err, stdout, stderr) => {
