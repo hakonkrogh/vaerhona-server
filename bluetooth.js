@@ -168,6 +168,10 @@ export function bleInit() {
                     action: "box-id",
                     data: process.env.BOX_ID,
                   });
+                  messageQueue.push({
+                    action: "version",
+                    data: "1",
+                  });
                 }, 1000);
               },
 
