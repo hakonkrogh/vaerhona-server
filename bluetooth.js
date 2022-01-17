@@ -170,7 +170,7 @@ export function bleInit() {
                   });
                   messageQueue.push({
                     action: "version",
-                    data: "1",
+                    data: "2",
                   });
                 }, 1000);
               },
