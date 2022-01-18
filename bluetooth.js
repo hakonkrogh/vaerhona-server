@@ -35,8 +35,7 @@ setTimeout(getOnlineStatus, 2000);
 let firmwareVersion = "n/a";
 (async function getFirmwareVersion() {
   try {
-    const status = await bashCmd("git rev-parse --short HEAD");
-    console.log({ status });
+    firmwareVersion = await bashCmd("git rev-parse --short HEAD");
   } catch (e) {
     console.log(e);
   }
@@ -191,8 +190,9 @@ export function bleInit() {
                   });
                   messageQueue.push({
                     action: "version",
-                    data: firmwareVersion,
+                    data: "n/a",
                   });
+                  console.log({ firmwareVersion });
                 }, 1000);
               },
 
