@@ -47,7 +47,7 @@ const wifiSettings = {
     console.log({ ssid, psk });
     return { ssid, psk };
   },
-  set(wifi) {
+  async set(wifi) {
     const content = `ctrl_interface=DIR=/var/run/wpa_supplicant GROUP=netdev
 update_config=1
     
@@ -57,7 +57,7 @@ network={
 }`;
 
     // Ensure file access
-    bashCmd(`sudo chmod 666 ${this.path}`);
+    await bashCmd(`sudo chmod 666 ${this.path}`);
 
     fs.writeFileSync(this.path, content);
 
@@ -87,14 +87,18 @@ function firmwareUpdate() {
 // Do a firmware update every 3 months-ish
 setTimeout(firmwareUpdate, 1000 * 60 * 60 * 24 * 30 * 3);
 
-function bashCmd(cmd) {
-  exec(cmd, (err, stdout, stderr) => {
-    if (err) {
-      console.error(err);
-    } else {
-      console.log(`stdout: ${stdout}`);
-      console.log(`stderr: ${stderr}`);
-    }
+async function bashCmd(cmd) {
+  return new Promise((resolve, reject) => {
+    exec(cmd, (err, stdout, stderr) => {
+      if (err) {
+        console.error(err);
+        reject(err);
+      } else {
+        console.log(`stdout: ${stdout}`);
+        console.log(`stderr: ${stderr}`);
+        resolve(stdout);
+      }
+    });
   });
 }
 
