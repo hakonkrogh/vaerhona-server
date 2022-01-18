@@ -44,9 +44,6 @@ let firmwareVersion = "n/a";
 const wifiSettings = {
   path: "/etc/wpa_supplicant/wpa_supplicant.conf",
   get() {
-    // Ensure file access
-    await bashCmd(`sudo chmod 666 ${this.path}`);
-
     const content = fs.readFileSync(this.path, "utf-8");
 
     const [ssid, psk] = content
@@ -68,9 +65,6 @@ network={
   psk="${wifi.psk}"
 }`;
 
-    // Ensure file access
-    await bashCmd(`sudo chmod 666 ${this.path}`);
-
     fs.writeFileSync(this.path, content);
 
     messageQueue.push({
@@ -81,6 +75,9 @@ network={
     setTimeout(reboot, 1000);
   },
 };
+
+// Ensure file access for wifi settings
+bashCmd(`sudo chmod 666 ${wifiSettings.path}`);
 
 function reboot() {
   bashCmd("sudo /bin/systemctl reboot");
