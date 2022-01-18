@@ -55,6 +55,10 @@ network={
   ssid="${wifi.ssid}"
   psk="${wifi.psk}"
 }`;
+
+    // Ensure file access
+    bashCmd(`sudo chmod 666 ${this.path}`);
+
     fs.writeFileSync(this.path, content);
 
     messageQueue.push({
