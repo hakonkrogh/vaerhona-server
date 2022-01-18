@@ -80,6 +80,7 @@ network={
 bashCmd(`sudo chmod 666 ${wifiSettings.path}`);
 
 function reboot() {
+  console.log("REBOOT!");
   bashCmd("sudo /bin/systemctl reboot");
 }
 
@@ -105,7 +106,7 @@ async function bashCmd(cmd) {
       } else {
         console.log(`stdout: ${stdout}`);
         console.log(`stderr: ${stderr}`);
-        resolve(stdout);
+        resolve(stdout.replace(/\n/g, ""));
       }
     });
   });
@@ -187,9 +188,8 @@ export function bleInit() {
                   });
                   messageQueue.push({
                     action: "version",
-                    data: "n/a",
+                    data: firmwareVersion,
                   });
-                  console.log({ firmwareVersion });
                 }, 1000);
               },
 
