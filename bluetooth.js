@@ -32,6 +32,15 @@ async function getOnlineStatus() {
 
 setTimeout(getOnlineStatus, 2000);
 
+let firmwareVersion = "n/a";
+(async function getFirmwareVersion() {
+  try {
+    firmwareVersion = await bashCmd("git rev-parse --short HEAD");
+  } catch (e) {
+    console.log(e);
+  }
+})();
+
 const wifiSettings = {
   path: "/etc/wpa_supplicant/wpa_supplicant.conf",
   get() {
@@ -178,7 +187,7 @@ export function bleInit() {
                   });
                   messageQueue.push({
                     action: "version",
-                    data: "2",
+                    data: firmwareVersion,
                   });
                 }, 1000);
               },
