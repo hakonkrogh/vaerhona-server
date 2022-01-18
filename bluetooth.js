@@ -44,6 +44,9 @@ let firmwareVersion = "n/a";
 const wifiSettings = {
   path: "/etc/wpa_supplicant/wpa_supplicant.conf",
   get() {
+    // Ensure file access
+    await bashCmd(`sudo chmod 666 ${this.path}`);
+
     const content = fs.readFileSync(this.path, "utf-8");
 
     const [ssid, psk] = content
@@ -215,7 +218,7 @@ export function bleInit() {
                 this.value = data;
 
                 try {
-                  console.log("write request");
+                  console.log("incoming write request");
 
                   const dataAsString = tx.decode(this.value);
                   console.log(dataAsString);
