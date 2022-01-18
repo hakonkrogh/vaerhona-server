@@ -35,7 +35,8 @@ setTimeout(getOnlineStatus, 2000);
 let firmwareVersion = "n/a";
 (async function getFirmwareVersion() {
   try {
-    firmwareVersion = await bashCmd("git rev-parse --short HEAD");
+    const status = await bashCmd("git rev-parse --short HEAD");
+    console.log({ status });
   } catch (e) {
     console.log(e);
   }
