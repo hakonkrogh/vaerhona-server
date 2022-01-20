@@ -16,21 +16,20 @@ function getSensorReadingMessage() {
   };
 }
 
-let isOnline = false;
-async function getOnlineStatus() {
-  try {
-    const response = await fetch("https://google.com");
+const getOnlineStatus = new Promise((resolve) => {
+  async function runCheck() {
+    try {
+      const response = await fetch("https://google.com");
 
-    isOnline = response.ok;
-  } catch (e) {
-    console.log(e);
-    isOnline = false;
+      resolve(response.ok);
+    } catch (e) {
+      console.log(e);
+      resolve(false);
+    }
   }
 
-  return isOnline;
-}
-
-setTimeout(getOnlineStatus, 2000);
+  setTimeout(runCheck, 2000);
+});
 
 let firmwareVersion = "n/a";
 (async function getFirmwareVersion() {
@@ -181,7 +180,7 @@ export function bleInit() {
                 );
                 sendSensorReading();
 
-                setTimeout(() => {
+                setTimeout(async () => {
                   messageQueue.push({
                     action: "box-id",
                     data: process.env.BOX_ID,
@@ -189,6 +188,16 @@ export function bleInit() {
                   messageQueue.push({
                     action: "version",
                     data: firmwareVersion,
+                  });
+                  messageQueue.push({
+                    action: "wifi-settings",
+                    data: wifiSettings.get(),
+                  });
+
+                  const isOnline = await getOnlineStatus();
+                  messageQueue.push({
+                    action: "is-online",
+                    data: isOnline,
                   });
                 }, 1000);
               },
@@ -223,22 +232,8 @@ export function bleInit() {
 
                   const json = JSON.parse(dataAsString);
                   switch (json.action) {
-                    case "get-wifi": {
-                      messageQueue.push({
-                        action: "wifi-settings",
-                        data: wifiSettings.get(),
-                      });
-                      break;
-                    }
                     case "set-wifi": {
                       wifiSettings.set(json.data);
-                      break;
-                    }
-                    case "get-online": {
-                      messageQueue.push({
-                        action: "is-online",
-                        data: isOnline,
-                      });
                       break;
                     }
                     case "firmware-update": {
