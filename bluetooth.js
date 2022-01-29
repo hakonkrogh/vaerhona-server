@@ -193,7 +193,7 @@ export function bleInit() {
                     data: wifiSettings.get(),
                   });
 
-                  const isOnline = await getOnlineStatus();
+                  const isOnline = await getOnlineStatus;
                   messageQueue.push({
                     action: "is-online",
                     data: isOnline,
