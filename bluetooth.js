@@ -94,7 +94,7 @@ function firmwareUpdate() {
 }
 
 // Do a firmware update every 3 months-ish
-setTimeout(firmwareUpdate, 1000 * 60 * 60 * 24 * 30 * 3);
+// setTimeout(firmwareUpdate, 1000 * 60 * 60 * 24 * 30 * 3);
 
 async function bashCmd(cmd) {
   return new Promise((resolve, reject) => {
