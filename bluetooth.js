@@ -5,6 +5,7 @@ import fetch from "node-fetch";
 
 import { getSensorValues } from "./sensors.js";
 import { logger } from "./logger.js";
+import { regenerateBoxId } from "./boxid";
 
 const messageQueue = [];
 const tx = new TextDecoder("utf-8");
@@ -215,7 +216,7 @@ export function bleInit() {
               },
 
               // Accept a new value for the characterstic's value
-              onWriteRequest: function (
+              onWriteRequest: async function (
                 data,
                 offset,
                 withoutResponse,
@@ -249,6 +250,11 @@ export function bleInit() {
                     }
                     case "take-snapshot": {
                       logger();
+                      break;
+                    }
+                    case "regenerate-boxid": {
+                      await regenerateBoxId();
+                      reboot();
                       break;
                     }
                   }
