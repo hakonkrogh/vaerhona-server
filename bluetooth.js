@@ -167,7 +167,7 @@ export function bleInit() {
                       Buffer.from(JSON.stringify(message[0]))
                     );
                   }
-                }, 100);
+                }, 1000);
 
                 function sendSensorReading() {
                   messageQueue.push(getSensorReadingMessage());
