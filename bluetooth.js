@@ -198,7 +198,7 @@ export function bleInit() {
                     action: "is-online",
                     data: isOnline,
                   });
-                }, 1000);
+                }, 250);
               },
 
               // If the client unsubscribes, we stop broadcasting the message
