@@ -4,7 +4,7 @@ dotenv.config();
 
 import { logger } from "./logger.js";
 import { bleInit } from "./bluetooth.js";
-import { regenerateBoxId } from "./boxid";
+import { regenerateBoxId } from "./boxid.js";
 
 async function boot() {
   // Get/set BOX_ID

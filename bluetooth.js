@@ -5,7 +5,7 @@ import fetch from "node-fetch";
 
 import { getSensorValues } from "./sensors.js";
 import { logger } from "./logger.js";
-import { regenerateBoxId } from "./boxid";
+import { regenerateBoxId } from "./boxid.js";
 
 const messageQueue = [];
 const tx = new TextDecoder("utf-8");
