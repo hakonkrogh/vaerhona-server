@@ -23,7 +23,6 @@ const getOnlineStatus = new Promise((resolve) => {
 
       resolve(response.ok);
     } catch (e) {
-      console.log(e);
       resolve(false);
     }
   }
