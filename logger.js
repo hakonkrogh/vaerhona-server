@@ -24,9 +24,9 @@ export async function logger() {
     console.log("--sensors", JSON.stringify(getSensorValues()));
     console.log("--boxId", process.env.BOX_ID);
 
-    function send(domain) {
+    async function send(domain) {
       try {
-        return fetch(`${domain}/api/graphql`, {
+        const r = await fetch(`${domain}/api/graphql`, {
           method: "POST",
           headers: {
             "content-type": "application/json",
@@ -50,6 +50,7 @@ export async function logger() {
             },
           }),
         });
+        return r;
       } catch (e) {
         return {};
       }
@@ -58,13 +59,13 @@ export async function logger() {
     let response = await send(apis[0]);
     if (!response.ok) {
       console.log(`"${apis[0]}" failed. Trying "${apis[1]}"...`);
-      console.log(JSON.stringify(await response.text(), null, 1));
+      // console.log(JSON.stringify(await response.text(), null, 1));
       response = await send(apis[1]);
     }
 
     if (!response.ok) {
       console.log(`Snapshot FAILED`);
-      console.log(await response.text());
+      // console.log(await response.text());
     } else {
       const json = await response.json();
 
