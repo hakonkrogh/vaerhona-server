@@ -2,9 +2,6 @@ import fs from "fs";
 
 import { bashCmd, reboot } from "./utils.js";
 
-// Ensure file access for wifi settings
-bashCmd(`sudo chmod 666 ${wifiSettings.path}`);
-
 export const wifiSettings = {
   path: "/etc/wpa_supplicant/wpa_supplicant.conf",
   get() {
@@ -34,3 +31,6 @@ network={
     setTimeout(reboot, 3000);
   },
 };
+
+// Ensure file access for wifi settings
+bashCmd(`sudo chmod 666 ${wifiSettings.path}`);
