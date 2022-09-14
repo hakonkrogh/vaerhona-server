@@ -1,21 +1,14 @@
 import bleno from "bleno";
-import fs from "fs";
-import { exec } from "child_process";
 import fetch from "node-fetch";
 
 import { getSensorValues } from "./sensors.js";
 import { logger } from "./logger.js";
 import { regenerateBoxId } from "./boxid.js";
+import { reboot, shutdown, firmwareUpdate } from "./utils.js";
+import { wifiSettings } from "./wifi.js";
 
 const messageQueue = [];
 const tx = new TextDecoder("utf-8");
-
-function getSensorReadingMessage() {
-  return {
-    action: "sensor-reading",
-    data: getSensorValues(),
-  };
-}
 
 const getOnlineStatus = new Promise((resolve) => {
   async function runCheck() {
@@ -39,77 +32,6 @@ let firmwareVersion = "n/a";
     console.log(e);
   }
 })();
-
-const wifiSettings = {
-  path: "/etc/wpa_supplicant/wpa_supplicant.conf",
-  get() {
-    const content = fs.readFileSync(this.path, "utf-8");
-
-    const [ssid, psk] = content
-      .split("network={")[1]
-      .split("}")[0]
-      .split("\n")
-      .map((a) => a.trim())
-      .filter(Boolean)
-      .map((a) => a.split('"')[1]);
-    console.log({ ssid, psk });
-    return { ssid, psk };
-  },
-  async set(wifi) {
-    const content = `ctrl_interface=DIR=/var/run/wpa_supplicant GROUP=netdev
-update_config=1
-    
-network={
-  ssid="${wifi.ssid}"
-  psk="${wifi.psk}"
-}`;
-
-    fs.writeFileSync(this.path, content);
-
-    messageQueue.push({
-      action: "wifi-settings",
-      data: wifiSettings.get(),
-    });
-
-    setTimeout(reboot, 1000);
-  },
-};
-
-// Ensure file access for wifi settings
-bashCmd(`sudo chmod 666 ${wifiSettings.path}`);
-
-function reboot() {
-  console.log("REBOOT!");
-  bashCmd("sudo /bin/systemctl reboot");
-}
-
-function shutdown() {
-  bashCmd("sudo /bin/systemctl poweroff");
-}
-
-function firmwareUpdate() {
-  bashCmd(
-    "git fetch origin && git reset --hard origin/main && npm install && sudo /bin/systemctl reboot"
-  );
-}
-
-// Do a firmware update every 3 months-ish
-// setTimeout(firmwareUpdate, 1000 * 60 * 60 * 24 * 30 * 3);
-
-async function bashCmd(cmd) {
-  return new Promise((resolve, reject) => {
-    exec(cmd, (err, stdout, stderr) => {
-      if (err) {
-        console.error(err);
-        reject(err);
-      } else {
-        console.log(`stdout: ${stdout}`);
-        console.log(`stderr: ${stderr}`);
-        resolve(stdout.replace(/\n/g, ""));
-      }
-    });
-  });
-}
 
 const uuid = "601202ac-16d1-4f74-819d-85788a5ad77a";
 
@@ -170,7 +92,10 @@ export function bleInit() {
                 }, 1000);
 
                 function sendSensorReading() {
-                  messageQueue.push(getSensorReadingMessage());
+                  messageQueue.push({
+                    action: "sensor-reading",
+                    data: getSensorValues(),
+                  });
                 }
 
                 // Broadcasting the sensor readings
@@ -234,6 +159,10 @@ export function bleInit() {
                   switch (json.action) {
                     case "set-wifi": {
                       wifiSettings.set(json.data);
+                      messageQueue.push({
+                        action: "wifi-settings",
+                        data: wifiSettings.get(),
+                      });
                       break;
                     }
                     case "firmware-update": {
