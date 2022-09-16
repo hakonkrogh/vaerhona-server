@@ -1,38 +1,30 @@
 import fetch from "node-fetch";
-import { execa } from "execa";
-import sharp from "sharp";
 import fs from "fs/promises";
 
+import { bashCmd } from "./utils.js";
 import { getSensorValues } from "./sensors.js";
 
 const apis = ["https://xn--vrhna-sra2k.no", "https://vhbackup.kroghweb.no"];
 
 export async function logger() {
   try {
-    await execa("libcamera-jpeg", ["-o", "snapshot.jpg", "-n"]);
+    await bashCmd("libcamera-jpeg -o snapshot.jpg -q 50 -n");
     const image = await fs.readFile("./snapshot.jpg");
+    const imageBase64 = image.toString("base64");
 
-    const imageCompressed = await sharp(image)
-      .jpeg({
-        quality: 50,
-      })
-      .toBuffer();
-    const imageBase64 = imageCompressed.toString("base64");
-
-    console.log("will send");
+    console.log("will send at " + new Date().toISOString());
     console.log("--image with length", imageBase64.length);
     console.log("--sensors", JSON.stringify(getSensorValues()));
     console.log("--boxId", process.env.BOX_ID);
 
-    async function send(domain) {
-      try {
-        const r = await fetch(`${domain}/api/graphql`, {
-          method: "POST",
-          headers: {
-            "content-type": "application/json",
-          },
-          body: JSON.stringify({
-            query: `
+    function send(domain) {
+      return fetch(`${domain}/api/graphql`, {
+        method: "POST",
+        headers: {
+          "content-type": "application/json",
+        },
+        body: JSON.stringify({
+          query: `
             mutation($input: AddSnapshotMutationInput!) {
               snapshots {
                 add(input: $input) {
@@ -41,19 +33,15 @@ export async function logger() {
               }
             }
           `,
-            variables: {
-              input: {
-                boxId: process.env.BOX_ID,
-                image: imageBase64,
-                ...getSensorValues(),
-              },
+          variables: {
+            input: {
+              boxId: process.env.BOX_ID,
+              image: imageBase64,
+              ...getSensorValues(),
             },
-          }),
-        });
-        return r;
-      } catch (e) {
-        return {};
-      }
+          },
+        }),
+      });
     }
 
     let response = await send(apis[0]);
