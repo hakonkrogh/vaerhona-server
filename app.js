@@ -21,6 +21,8 @@ async function boot() {
   function startApp() {
     logger();
     bleInit();
+
+    // Take a snapshot every hour
     setInterval(logger, 1000 * 60 * 60);
 
     // Reboot every day
