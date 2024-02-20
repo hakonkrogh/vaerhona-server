@@ -20,7 +20,7 @@ export function firmwareUpdate() {
 export function osUpdate() {
   console.log("OS UPDATE");
   bashCmd(
-    "sudo apt update && sudo apt full-upgrade && sudo /bin/systemctl reboot"
+    "sudo apt update && sudo apt full-upgrade && sudo apt dist-upgrade && sudo /bin/systemctl reboot"
   );
 }
 
