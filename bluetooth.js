@@ -4,7 +4,13 @@ import fetch from "node-fetch";
 import { getSensorValues } from "./sensors.js";
 import { logger } from "./logger.js";
 import { regenerateBoxId } from "./boxid.js";
-import { reboot, shutdown, firmwareUpdate, bashCmd } from "./utils.js";
+import {
+  reboot,
+  shutdown,
+  firmwareUpdate,
+  osUpdate,
+  bashCmd,
+} from "./utils.js";
 import { wifiSettings } from "./wifi.js";
 
 const messageQueue = [];
@@ -167,6 +173,10 @@ export function bleInit() {
                     }
                     case "firmware-update": {
                       firmwareUpdate();
+                      break;
+                    }
+                    case "os-update": {
+                      osUpdate();
                       break;
                     }
                     case "reboot": {

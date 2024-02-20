@@ -17,6 +17,13 @@ export function firmwareUpdate() {
   );
 }
 
+export function osUpdate() {
+  console.log("OS UPDATE");
+  bashCmd(
+    "sudo apt update && sudo apt full-upgrade && sudo /bin/systemctl reboot"
+  );
+}
+
 export async function bashCmd(cmd) {
   return new Promise((resolve, reject) => {
     exec(cmd, (err, stdout, stderr) => {
