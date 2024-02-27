@@ -192,7 +192,7 @@ export function bleInit() {
                       break;
                     }
                     case "regenerate-boxid": {
-                      await regenerateBoxId();
+                      await regenerateBoxId(json.id);
                       reboot();
                       break;
                     }
