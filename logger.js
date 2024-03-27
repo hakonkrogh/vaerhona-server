@@ -65,6 +65,7 @@ export async function logger() {
       }
     }
   } catch (e) {
+    console.log("logger error ⛔️");
     console.log(e);
   }
 }
