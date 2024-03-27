@@ -20,6 +20,7 @@ export const wifiSettings = {
   set(wifi) {
     const content = `ctrl_interface=DIR=/var/run/wpa_supplicant GROUP=netdev
 update_config=1
+country=NO
     
 network={
   ssid="${wifi.ssid}"
