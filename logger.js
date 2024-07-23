@@ -4,8 +4,7 @@ import fs from "fs/promises";
 import { bashCmd } from "./utils.js";
 import { getSensorValues } from "./sensors.js";
 
-const host =
-  "vaerhona-git-update-deps-hkon-kroghs-projects-9845328c.vercel.app";
+const host = "xn--vrhna-sra2k.no";
 
 export async function logger() {
   try {
