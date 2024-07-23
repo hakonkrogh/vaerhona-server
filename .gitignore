@@ -13,3 +13,5 @@ snapshot.jpg
 
 # Env
 .env
+
+.package-lock.json

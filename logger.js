@@ -4,7 +4,8 @@ import fs from "fs/promises";
 import { bashCmd } from "./utils.js";
 import { getSensorValues } from "./sensors.js";
 
-const apis = ["https://xn--vrhna-sra2k.no", "https://vhbackup.kroghweb.no"];
+const host =
+  "vaerhona-git-update-deps-hkon-kroghs-projects-9845328c.vercel.app";
 
 export async function logger() {
   try {
@@ -18,7 +19,7 @@ export async function logger() {
     console.log("--boxId", process.env.BOX_ID);
 
     function send(domain) {
-      return fetch(`${domain}/api/graphql`, {
+      return fetch(`https://${host}/api/graphql`, {
         method: "POST",
         headers: {
           "content-type": "application/json",
@@ -44,12 +45,7 @@ export async function logger() {
       });
     }
 
-    let response = await send(apis[0]);
-    if (!response.ok) {
-      console.log(`"${apis[0]}" failed. Trying "${apis[1]}"...`);
-      // console.log(JSON.stringify(await response.text(), null, 1));
-      response = await send(apis[1]);
-    }
+    const response = await send();
 
     if (!response.ok) {
       console.log(`Snapshot FAILED`);
