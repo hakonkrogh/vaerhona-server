@@ -24,15 +24,17 @@ export function osUpdate() {
   );
 }
 
-export async function bashCmd(cmd) {
+export async function bashCmd(cmd, silent) {
   return new Promise((resolve, reject) => {
     exec(cmd, (err, stdout, stderr) => {
       if (err) {
         console.error(err);
         reject(err);
       } else {
-        console.log(`stdout: ${stdout}`);
-        console.log(`stderr: ${stderr}`);
+        if (!silent) {
+          console.log(`stdout: ${stdout}`);
+          console.log(`stderr: ${stderr}`);
+        }
         resolve(stdout.replace(/\n/g, ""));
       }
     });

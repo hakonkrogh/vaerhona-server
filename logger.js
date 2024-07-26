@@ -7,9 +7,9 @@ import { getSensorValues } from "./sensors.js";
 const host = "xn--vrhna-sra2k.no";
 
 // Take a picture every minute
-void bashCmd("libcamera-jpeg -o snapshot.jpg -q 50 -n");
+void bashCmd("libcamera-jpeg -o snapshot.jpg -q 50 -n", true);
 setInterval(
-  () => bashCmd("libcamera-jpeg -o snapshot.jpg -q 50 -n"),
+  () => bashCmd("libcamera-jpeg -o snapshot.jpg -q 50 -n", true),
   60 * 1000
 );
 
