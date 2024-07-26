@@ -6,9 +6,15 @@ import { getSensorValues } from "./sensors.js";
 
 const host = "xn--vrhna-sra2k.no";
 
+// Take a picture every minute
+void bashCmd("libcamera-jpeg -o snapshot.jpg -q 50 -n");
+setInterval(
+  () => bashCmd("libcamera-jpeg -o snapshot.jpg -q 50 -n"),
+  60 * 1000
+);
+
 export async function logger() {
   try {
-    await bashCmd("libcamera-jpeg -o snapshot.jpg -q 50 -n");
     const image = await fs.readFile("./snapshot.jpg");
     const imageBase64 = image.toString("base64");
 
