@@ -1,5 +1,13 @@
 import { exec } from "child_process";
 
+export function sleep(ms) {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+}
+
+export function takePicture() {
+  bashCmd("libcamera-jpeg -o snapshot.jpg -q 50 -n", true);
+}
+
 export function reboot() {
   console.log("REBOOT!");
   bashCmd("sudo /bin/systemctl reboot");

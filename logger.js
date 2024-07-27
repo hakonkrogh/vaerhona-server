@@ -6,13 +6,6 @@ import { getSensorValues } from "./sensors.js";
 
 const host = "xn--vrhna-sra2k.no";
 
-// Take a picture every minute
-void bashCmd("libcamera-jpeg -o snapshot.jpg -q 50 -n", true);
-setInterval(
-  () => bashCmd("libcamera-jpeg -o snapshot.jpg -q 50 -n", true),
-  60 * 1000
-);
-
 export async function logger() {
   try {
     const image = await fs.readFile("./snapshot.jpg");
@@ -23,7 +16,7 @@ export async function logger() {
     console.log("--sensors", JSON.stringify(getSensorValues()));
     console.log("--boxId", process.env.BOX_ID);
 
-    function send(domain) {
+    function send() {
       return fetch(`https://${host}/api/graphql`, {
         method: "POST",
         headers: {
