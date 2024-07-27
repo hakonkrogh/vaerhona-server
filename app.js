@@ -22,6 +22,8 @@ async function boot() {
     logger();
     bleInit();
 
+    await sleep(2_000);
+
     void takePicture();
 
     // Take a picture every hour
