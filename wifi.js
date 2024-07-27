@@ -4,7 +4,7 @@ import { bashCmd, reboot } from "./utils.js";
 
 export const wifiSettings = {
   path: "/etc/wpa_supplicant/wpa_supplicant.conf",
-  fromConfigContent: (content) => {
+  parseConfigContent: (content) => {
     try {
       // Define the regex pattern to match the wifi configuration
       // The pattern looks for "ssid" and "psk" keys followed by "=" and captures their respective values
@@ -43,7 +43,7 @@ ${config
   get() {
     const content = fs.readFileSync(this.path, "utf-8");
 
-    return this.getFromConfigContent(content);
+    return this.parseConfigContent(content);
   },
   set(config) {
     const content = this.toConfigContent(
