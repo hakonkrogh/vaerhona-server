@@ -8,10 +8,8 @@ node_modules
 # Snapshot file
 snapshot.jpg
 
-# Tmp files
-.tmp-forever
-
 # Env
 .env
 
 .package-lock.json
+yarn.lock

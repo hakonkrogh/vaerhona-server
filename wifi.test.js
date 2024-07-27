@@ -2,7 +2,7 @@ import { wifiSettings } from "./wifi.js";
 
 test("parses config correctly", () => {
   expect(
-    wifiSettings.fromConfigContent(`ctrl_interface=DIR=/var/run/wpa_supplicant GROUP=netdev
+    wifiSettings.parseConfigContent(`ctrl_interface=DIR=/var/run/wpa_supplicant GROUP=netdev
 update_config=1
 country=NO
     
@@ -18,7 +18,7 @@ network={
   ]);
 
   expect(
-    wifiSettings.fromConfigContent(`ctrl_interface=DIR=/var/run/wpa_supplicant GROUP=netdev
+    wifiSettings.parseConfigContent(`ctrl_interface=DIR=/var/run/wpa_supplicant GROUP=netdev
 update_config=1
 country=NO
 
