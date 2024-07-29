@@ -5,7 +5,7 @@ dotenv.config();
 import { logger } from "./logger.js";
 import { bleInit } from "./bluetooth.js";
 import { regenerateBoxId } from "./boxid.js";
-import { reboot, sleep, takePicture } from "./utils.js";
+import { reboot, sleep } from "./utils.js";
 
 async function boot() {
   // Get/set BOX_ID
@@ -21,13 +21,6 @@ async function boot() {
   async function startApp() {
     logger();
     bleInit();
-
-    await sleep(2_000);
-
-    void takePicture();
-
-    // Take a picture every hour
-    setInterval(takePicture, 1_000 * 60 * 60);
 
     await sleep(10_000);
 

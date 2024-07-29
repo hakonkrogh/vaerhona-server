@@ -1,12 +1,18 @@
 import fetch from "node-fetch";
 import fs from "fs/promises";
 
-import { bashCmd } from "./utils.js";
+import { takePicture } from "./utils.js";
 import { getSensorValues } from "./sensors.js";
 
 const host = "xn--vrhna-sra2k.no";
 
 export async function logger() {
+  try {
+    await takePicture();
+  } catch (err) {
+    console.log("Could not take picture, continuing with old...");
+  }
+
   try {
     const image = await fs.readFile("./snapshot.jpg");
     const imageBase64 = image.toString("base64");
