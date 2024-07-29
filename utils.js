@@ -4,8 +4,10 @@ export function sleep(ms) {
   return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
-export function takePicture() {
-  bashCmd("libcamera-jpeg -o snapshot.jpg -q 50 -n", true);
+export async function takePicture() {
+  console.log("taking picture...");
+  await bashCmd("libcamera-jpeg -o snapshot.jpg -q 50 -n", true);
+  console.log("picture taken ✓");
 }
 
 export function reboot() {
