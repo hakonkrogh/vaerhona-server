@@ -19,6 +19,7 @@ async function boot() {
   }
 
   async function startApp() {
+    console.log("Starting app...");
     logger();
     bleInit();
 

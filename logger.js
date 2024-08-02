@@ -21,6 +21,7 @@ export async function logger() {
   ]);
 
   if (res === sleepWon) {
+    console.log("SLEEP WON");
     reboot();
     return;
   }
