@@ -6,7 +6,29 @@ import { getSensorValues } from "./sensors.js";
 
 const host = "xn--vrhna-sra2k.no";
 
+function sleep(ms) {
+  return new Promise((r) => setTimeout(r, ms));
+}
+
 export async function logger() {
+  const sleepWon = "maybe";
+  const res = await Promise.race([
+    logToApi(),
+    (async function () {
+      await sleep(60_000 * 2);
+      return sleepWon;
+    })(),
+  ]);
+
+  if (res === sleepWon) {
+    reboot();
+    return;
+  }
+
+  return res;
+}
+
+async function logToApi() {
   try {
     await takePicture();
   } catch (err) {
