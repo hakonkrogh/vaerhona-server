@@ -75,16 +75,16 @@ async function logToApi() {
 
     if (!response.ok) {
       throw new Error(`Snapshot FAILED`);
-    } else {
-      const json = await response.json();
-
-      if (json.errors) {
-        console.log(JSON.stringify(json.errors, null, 1));
-        throw new Error(`Snapshot FAILED`);
-      } else {
-        console.log(`Snapshot sent`);
-      }
     }
+
+    const json = await response.json();
+
+    if (json.errors) {
+      console.log(JSON.stringify(json.errors, null, 1));
+      throw new Error(`Snapshot FAILED`);
+    }
+
+    console.log(`Snapshot sent`);
   } catch (e) {
     console.log("logger error ⛔️");
     console.log(e);
