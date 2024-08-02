@@ -1,7 +1,7 @@
 import fetch from "node-fetch";
 import fs from "fs/promises";
 
-import { takePicture } from "./utils.js";
+import { reboot, takePicture } from "./utils.js";
 import { getSensorValues } from "./sensors.js";
 
 const host = "xn--vrhna-sra2k.no";
@@ -52,14 +52,13 @@ export async function logger() {
     const response = await send();
 
     if (!response.ok) {
-      console.log(`Snapshot FAILED`);
-      // console.log(await response.text());
+      throw new Error(`Snapshot FAILED`);
     } else {
       const json = await response.json();
 
       if (json.errors) {
-        console.log(`Snapshot FAILED`);
         console.log(JSON.stringify(json.errors, null, 1));
+        throw new Error(`Snapshot FAILED`);
       } else {
         console.log(`Snapshot sent`);
       }
@@ -67,5 +66,6 @@ export async function logger() {
   } catch (e) {
     console.log("logger error ⛔️");
     console.log(e);
+    void reboot();
   }
 }
