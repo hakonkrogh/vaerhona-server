@@ -15,7 +15,7 @@ export async function logger() {
   const res = await Promise.race([
     logToApi(),
     (async function () {
-      await sleep(60_000 * 2);
+      await sleep(60_000 * 3);
       return sleepWon;
     })(),
   ]);
