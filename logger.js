@@ -1,5 +1,5 @@
 import fetch from "node-fetch";
-import fs from "fs/promises";
+import fs from "fs";
 
 import { reboot, takePicture } from "./utils.js";
 import { getSensorValues } from "./sensors.js";
@@ -37,8 +37,9 @@ async function logToApi() {
   }
 
   try {
-    const image = await fs.readFile("./snapshot.jpg");
-    const imageBase64 = image.toString("base64");
+    const imageBase64 = fs.readFileSync("./snapshot.jpg", {
+      encoding: "base64",
+    });
 
     console.log("will send at " + new Date().toISOString());
     console.log("--image with length", imageBase64.length);
