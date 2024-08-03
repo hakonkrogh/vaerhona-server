@@ -2,10 +2,10 @@
 import dotenv from "dotenv";
 dotenv.config();
 
-import { logger } from "./logger.js";
+import { host, logger } from "./logger.js";
 import { bleInit } from "./bluetooth.js";
 import { regenerateBoxId } from "./boxid.js";
-import { reboot, sleep } from "./utils.js";
+import { bashCmd, reboot, sleep } from "./utils.js";
 
 async function boot() {
   // Get/set BOX_ID
@@ -30,6 +30,9 @@ async function boot() {
 
     // Reboot every day
     setTimeout(reboot, 1_000 * 60 * 60 * 24);
+
+    // Ping something every minute to keep wifi alive
+    setInterval(() => bashCmd(`ping ${host} -c 1`), 60_000);
 
     // Do a firmware update every 3 months-ish
     // setTimeout(firmwareUpdate, 1_000 * 60 * 60 * 24 * 30 * 3);

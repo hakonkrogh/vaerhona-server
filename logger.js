@@ -4,7 +4,7 @@ import fs from "fs";
 import { reboot, takePicture } from "./utils.js";
 import { getSensorValues } from "./sensors.js";
 
-const host = "xn--vrhna-sra2k.no";
+export const host = "xn--vrhna-sra2k.no";
 
 function sleep(ms) {
   return new Promise((r) => setTimeout(r, ms));
