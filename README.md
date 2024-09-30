@@ -16,7 +16,9 @@ https://blog.jaimyn.dev/the-fastest-way-to-clone-sd-card-macos/
 
 ## Node install
 
-$ wget -O - https://raw.githubusercontent.com/sdesalas/node-pi-zero/master/install-node-v14.17.1.sh | bash
+$ curl -sL https://deb.nodesource.com/setup_20.x | sudo -E bash -
+
+$ sudo apt-get install -y nodejs
 
 ## PM2
 
