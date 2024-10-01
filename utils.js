@@ -6,7 +6,7 @@ export function sleep(ms) {
 
 export async function takePicture() {
   console.log("taking picture...");
-  await bashCmd("libcamera-jpeg -o snapshot.jpg -q 50 -n", true);
+  await bashCmd("raspistill -o snapshot.jpg -q 50 -n", true);
   console.log("picture taken ✔");
 }
 
