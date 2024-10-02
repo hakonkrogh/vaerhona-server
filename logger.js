@@ -46,33 +46,37 @@ async function logToApi() {
     console.log("--sensors", JSON.stringify(getSensorValues()));
     console.log("--boxId", process.env.BOX_ID);
 
+    const body = JSON.stringify({
+      query: `
+          mutation($input: AddSnapshotMutationInput!) {
+            snapshots {
+              add(input: $input) {
+                success
+              }
+            }
+          }
+        `,
+      variables: {
+        input: {
+          boxId: process.env.BOX_ID,
+          image: imageBase64,
+          ...getSensorValues(),
+        },
+      },
+    });
+
     const response = await fetch(`https://${host}/api/graphql`, {
       method: "POST",
       headers: {
         "content-type": "application/json",
       },
-      body: JSON.stringify({
-        query: `
-            mutation($input: AddSnapshotMutationInput!) {
-              snapshots {
-                add(input: $input) {
-                  success
-                }
-              }
-            }
-          `,
-        variables: {
-          input: {
-            boxId: process.env.BOX_ID,
-            image: imageBase64,
-            ...getSensorValues(),
-          },
-        },
-      }),
+      body,
     });
 
     if (!response.ok) {
-      throw new Error(await response.text());
+      // throw new Error(await response.text());
+      console.log(body);
+      console.log(response.status);
     }
 
     const json = await response.json();
