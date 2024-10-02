@@ -74,9 +74,7 @@ async function logToApi() {
     });
 
     if (!response.ok) {
-      // throw new Error(await response.text());
-      console.log(body);
-      console.log(response.status);
+      throw new Error(await response.text());
     }
 
     const json = await response.json();
