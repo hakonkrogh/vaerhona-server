@@ -90,6 +90,6 @@ async function logToApi() {
   } catch (e) {
     console.log("logger error ⛔️");
     console.log(e);
-    void reboot();
+    // void reboot();
   }
 }
