@@ -11,6 +11,9 @@ export function getSensorValues() {
   return values;
 }
 
+dht22.setMaxRetries(10);
+dht22.initialize(22, 4);
+
 async function readSensorValues() {
   try {
     const dht22values = await dht22.read(
