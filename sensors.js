@@ -19,7 +19,10 @@ async function readSensorValues() {
     );
     values.temperature = parseFloat(dht22values.temperature.toFixed(1));
     values.humidity = parseInt(dht22values.humidity);
-  } catch (e) {}
+  } catch (e) {
+    console.error("could not read sensor values");
+    console.log(e);
+  }
 }
 
 readSensorValues();
