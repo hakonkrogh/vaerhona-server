@@ -11,9 +11,6 @@ export function getSensorValues() {
   return values;
 }
 
-dht22.setMaxRetries(10);
-dht22.initialize(22, 4);
-
 async function readSensorValues() {
   try {
     const dht22values = await dht22.read(
@@ -28,5 +25,17 @@ async function readSensorValues() {
   }
 }
 
-readSensorValues();
-setInterval(readSensorValues, 1000);
+let started = false;
+
+// Side effects (GPIO init + polling) are kept out of module load so the
+// module can be imported off-device (e.g. in tests) without throwing.
+export function initSensors() {
+  if (started) return;
+  started = true;
+
+  dht22.setMaxRetries(10);
+  dht22.initialize(22, 4);
+
+  readSensorValues();
+  setInterval(readSensorValues, 1000);
+}
